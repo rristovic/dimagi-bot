@@ -37,7 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
-        app:srcCompat="@drawable/ic_shield" />
+        android:tint="@color/colorAccent"
+        app:srcCompat="@drawable/ic_check" />
 
     <View
         android:layout_width="match_parent"

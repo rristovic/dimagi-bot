@@ -91,7 +91,10 @@ public class TodoRepository implements ITodoRepository {
             synchronized (mDataLock) {
                 String jsonData = mSharedPrefs.getString(KEY_ITEMS, null);
                 // assert data exists
-                if (jsonData == null) return;
+                if (jsonData == null) {
+                    postNewData();
+                    return;
+                }
 
                 mData = new Gson().fromJson(jsonData, new TypeToken<List<TodoItem>>() {
                 }.getType());

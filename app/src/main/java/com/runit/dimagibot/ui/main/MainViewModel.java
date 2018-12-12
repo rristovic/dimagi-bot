@@ -106,7 +106,7 @@ public class MainViewModel {
 
     private void refreshData() {
         mItems.removeSource(mSource);
-        mItems.addSource(mRepo.getItems(), todoItems -> {
+        mItems.addSource(mSource, todoItems -> {
             if (todoItems != null && (mShowCompletedOnly || mShowUncompletedOnly)) {
                 List<TodoItem> filteredList = new ArrayList<>(todoItems.size());
                 for (TodoItem item : todoItems) {
