@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DimagiBot</string>
+    <string name="no_todo_items_found">No Todo items found.</string>
+</resources>
