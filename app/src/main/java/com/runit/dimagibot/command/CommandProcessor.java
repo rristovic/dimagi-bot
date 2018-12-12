@@ -9,8 +9,9 @@ public class CommandProcessor implements ICommandProcessor {
         mHandler = handler;
     }
 
+
     @Override
-    public void processCommand(String rawCommandString) throws ProcessingException {
+    public Command parseCommand(String rawCommandString) throws ProcessingException {
         // assert
         if (rawCommandString == null || rawCommandString.isEmpty())
             throw new ProcessingException("Can't process empty input.");
@@ -20,9 +21,16 @@ public class CommandProcessor implements ICommandProcessor {
 
         // make all lower in order to process commands
         Command.CommandType type = tryProcessingType(rawCommandString);
+        if (type.equals(Command.CommandType.HELP)) {
+            return new Command(Command.CommandType.HELP, "");
+        }
         String data = tryProcessingData(rawCommandString, type);
-        Command cmd = new Command(type, data);
-        mHandler.handleCommand(cmd);
+        return new Command(type, data);
+    }
+
+    @Override
+    public void processCommand(Command command) throws ProcessingException {
+        mHandler.handleCommand(command);
     }
 
     /**
@@ -46,7 +54,7 @@ public class CommandProcessor implements ICommandProcessor {
 
         if (type.equals(Command.CommandType.EDIT)) {
             // for edit actions, there should be [index, dataString]
-            if(!dataString.contains(" "))
+            if (!dataString.contains(" "))
                 throw new ProcessingException("Invalid arguments for EDIT command.");
 
             String numData = dataString.substring(0, dataString.indexOf(" "));
@@ -60,6 +68,12 @@ public class CommandProcessor implements ICommandProcessor {
             int indx = Integer.parseInt(dataString);
             if (indx <= 0)
                 throw new ProcessingException("Invalid index argument.");
+        } else if (type.equals(Command.CommandType.FILTER)) {
+            if (!dataString.toLowerCase().contains("completed")
+                    && !dataString.toLowerCase().contains("uncompleted")
+                    && !dataString.toLowerCase().contains("remove")) {
+                throw new ProcessingException("Invalid filter value.");
+            }
         }
     }
 
@@ -71,6 +85,9 @@ public class CommandProcessor implements ICommandProcessor {
      * @throws ProcessingException
      */
     private Command.CommandType tryProcessingType(String rawCommandString) throws ProcessingException {
+        if (rawCommandString.toLowerCase().equals(Command.CommandType.HELP.rawText)) {
+            return Command.CommandType.HELP;
+        }
         String command = rawCommandString.substring(0, rawCommandString.indexOf(" "));
         command = command.toLowerCase();
         if (command.equals(Command.CommandType.ADD.rawText)) {
@@ -83,6 +100,8 @@ public class CommandProcessor implements ICommandProcessor {
             return Command.CommandType.REMOVE;
         } else if (command.equals(Command.CommandType.REMINDER.rawText)) {
             return Command.CommandType.REMINDER;
+        } else if (command.equals(Command.CommandType.FILTER.rawText)) {
+            return Command.CommandType.FILTER;
         }
         throw new ProcessingException("Invalid command.");
     }
@@ -90,10 +109,10 @@ public class CommandProcessor implements ICommandProcessor {
     private String processBadInput(String rawCommandString) throws ProcessingException {
         // reduce user input errors
         rawCommandString = rawCommandString.trim();
-        if (!rawCommandString.contains(" ")) {
+        if (!rawCommandString.toLowerCase().equals(Command.CommandType.HELP.rawText)
+                && !rawCommandString.contains(" ")) {
             throw new ProcessingException("Invalid command input.");
         }
         return rawCommandString;
     }
-
 }

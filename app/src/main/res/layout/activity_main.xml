@@ -14,14 +14,18 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
+
         <EditText
+            android:hint="Enter 'help' for command list"
             android:id="@+id/et_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:imeOptions="actionDone"
             android:inputType="text"
-            android:maxLines="1" />
+            android:maxLines="1" >
+            <requestFocus/>
+        </EditText>
 
         <Button
             android:id="@+id/btn_go"
@@ -53,4 +57,5 @@
         android:textColor="@color/text_black_secondary"
         android:textSize="18sp"
         android:visibility="gone" />
+
 </LinearLayout>

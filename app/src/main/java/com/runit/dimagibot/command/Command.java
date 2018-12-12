@@ -19,7 +19,7 @@ public class Command {
     }
 
     public enum  CommandType {
-        ADD("add"), REMOVE("remove"), EDIT("edit"), MARK_DONE("completed"), REMINDER("remind");
+        ADD("add"), REMOVE("remove"), EDIT("edit"), MARK_DONE("completed"), REMINDER("remind"), HELP("help"), FILTER("filter");
 
         public final String rawText;
 

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DimagiBot</string>
     <string name="no_todo_items_found">No Todo items found.</string>
+    <string name="help_text">help\nadd [todo text argument]\nremove [item index argument]\ncompleted [item index argument]\nedit [item index arg] [new text arg]\nfilter [completed|uncompleted|remove]</string>
 </resources>

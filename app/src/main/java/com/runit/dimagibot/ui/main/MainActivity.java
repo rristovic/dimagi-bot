@@ -1,14 +1,13 @@
 package com.runit.dimagibot.ui.main;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runit.dimagibot.Injector;
@@ -21,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MainViewModel mViewModel;
     private TodoListAdapter mAdapter;
     private View mNoDataView;
+    private AlertDialog mHelpDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mAdapter.setData(items);
         });
         mViewModel.getMessage().observe(this, msg -> Toast.makeText(this, msg, Toast.LENGTH_LONG).show());
+        mViewModel.getDisplayHelp().observe(this, display -> {
+            if (display != null && display) {
+                AlertDialog alertDialog = buildHelpDialog();
+                alertDialog.show();
+            }
+        });
     }
 
     @Override
@@ -55,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
 
     private void init() {
         mEtInput = findViewById(R.id.et_input);
@@ -77,5 +82,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void newCommandEntered() {
         mViewModel.onNewCommand(mEtInput.getText().toString());
+    }
+
+    private AlertDialog buildHelpDialog() {
+        if(mHelpDialog == null) {
+            mHelpDialog = new AlertDialog.Builder(this)
+                    .setTitle("Available commands")
+                    .setMessage(getString(R.string.help_text))
+                    .setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create();
+        }
+        return mHelpDialog;
     }
 }
